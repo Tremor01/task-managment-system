@@ -1,0 +1,45 @@
+
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: 1
+
+
+services:
+  backend:
+    build: ./backend
+    entrypoint:
+      - "/project/entrypoint.sh"
+    volumes:
+      - "./backend:/project"
+    depends_on:
+      - db
+    env_file:
+      - ${APP_ENV_FILE}
+    ports:
+      - ${APP_PORT}:8000
+    <<: *logging
+
+  frontend:
+    build: ./frontend
+    entrypoint:
+      - "/project/entrypoint.sh"
+    volumes:
+      - "./frontend:/project"
+    depends_on:
+      - backend
+    env_file:
+      - ${COLLECTORS_ENV_FILE}
+    <<: *logging
+
+  db:
+    image: postgres:latest
+    restart: always
+
+    volumes:
+      - .docker_volumes/postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ${DB_ENV_FILE}
+    <<: *logging
