@@ -5,12 +5,12 @@ on:
     branches:
       - "main"
     paths:
-      - "**/*.py"
+      - "backend/**/*.py"
   pull_request:
     branches:
       - "main"
     paths:
-      - "**/*.py"
+      - "backend/**/*.py"
 
 jobs:
   pyright-check:
@@ -25,19 +25,15 @@ jobs:
         with:
           python-version: "3.12.5"
 
-      - name: Install Python deps
+      - name: Install dependencies
         run: |
+          cd backend
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
+          pip install -r requirements.txt
 
       - name: Install Pyright
         run: npm install -g pyright
 
       - name: Run Pyright
-        run: |
-          pyright
+        working-directory: ./backend  # Указываем рабочую директорию
+        run: pyright
