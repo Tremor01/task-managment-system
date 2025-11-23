@@ -1,8 +1,9 @@
 from pydantic import PostgresDsn
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
 from typing import AsyncIterator, no_type_check
+
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from .settings import get_db_settings
 
@@ -42,4 +43,8 @@ async def get_session() -> AsyncIterator[AsyncSession]:
     )
     async with async_session() as session:
         yield session
-    
+
+
+async def create_db_and_tables():
+    async with ENGINE.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

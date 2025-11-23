@@ -2,3 +2,7 @@ fastapi==0.121.3
 asyncpg==0.30.0
 SQLAlchemy==2.0.44
 pydantic==2.12.4
+uvicorn==0.38.0
+
+fastapi-users==15.0.1
+fastapi-users-db-sqlalchemy==7.0.0

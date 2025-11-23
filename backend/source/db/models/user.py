@@ -1,11 +1,13 @@
-from .base import Base
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi import Depends
+
+from db.database import get_session, Base
 
 
-class User(Base):
-    __tablename__ = "users"
+class User(SQLAlchemyBaseUserTableUUID, Base):
+    pass
 
-    email: Mapped[str] = mapped_column(String(length=260))
-    hash_password: Mapped[str] = mapped_column(String(length=260))
-    username: Mapped[str] = mapped_column(String(length=30))
+
+async def get_user_db(session: AsyncSession = Depends(get_session)):
+    yield SQLAlchemyUserDatabase(session, User)
