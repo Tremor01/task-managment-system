@@ -6,7 +6,7 @@ from services import StatusService, get_status_service
 
 
 TAGS = ["Statuses"]
-router = APIRouter(prefix=PREFIX, tags=TAGS)
+router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(

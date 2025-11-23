@@ -6,7 +6,7 @@ from services import PriorityService, get_priority_service
 
 
 TAGS = ["Priorities"]
-router = APIRouter(prefix=PREFIX, tags=TAGS)
+router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(

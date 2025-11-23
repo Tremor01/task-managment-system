@@ -7,7 +7,7 @@ from services import LabelService, get_label_service
 
 
 TAGS = ["Labels"]
-router = APIRouter(prefix=PREFIX, tags=TAGS)
+router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(

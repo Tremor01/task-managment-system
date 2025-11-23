@@ -6,7 +6,7 @@ from services import TaskService, get_task_service
 
 
 TAGS = ["Tasks"]
-router = APIRouter(prefix=PREFIX, tags=TAGS)
+router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(
