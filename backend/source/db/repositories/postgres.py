@@ -73,14 +73,16 @@ class PostgresRepository(BaseRepository, Generic[ModelT]):
             
         return obj
 
-    async def delete(self, obj: ModelT):
+    async def delete(self, obj: ModelT) -> bool:
         async with self._start_session():
             try:
                 await self.session.delete(obj)
                 await self.commit()
+                return True
             except Exception as e:
                 logging.error(f"Delete failed for {self.model.__name__}: {e}")
                 await self.session.rollback()
+                return False
     
     async def get_by_id(self, id: int) -> ModelT | None:
         async with self._start_session():

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from .api_settings import Paths, PREFIX
 
-from schemas.task import *
+from schemas.task import responses, params
 from services import TaskService, get_task_service
 
 
@@ -14,13 +14,13 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
     name="Get Task",
     status_code=status.HTTP_200_OK,
     responses={
-        status.HTTP_200_OK: {"model": TaskResponse},
+        status.HTTP_200_OK: {"model": responses.GetTasks},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_400_BAD_REQUEST: {}
     }
 )
 async def get_task(
-    parameters: TaskGetParams = Depends(),
+    parameters: params.GetTasks = Depends(),
     service: TaskService = Depends(get_task_service)
 ):
     return await service.get_tasks(parameters)
@@ -31,13 +31,13 @@ async def get_task(
     name="Create Task",
     status_code=status.HTTP_201_CREATED,
     responses={
-        status.HTTP_201_CREATED: {"model": TaskResponse},
+        status.HTTP_201_CREATED: {"model": responses.CreateTask},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_400_BAD_REQUEST: {}
     }
 )
 async def get_task(
-    parameters: TaskCreateParams = Depends(),
+    parameters: params.CreateTask = Depends(),
     service: TaskService = Depends(get_task_service)
 ):
     return await service.create_task(parameters)

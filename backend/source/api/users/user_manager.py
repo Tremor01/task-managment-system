@@ -15,7 +15,7 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from db.models.user import User, get_user_db
 
 
-SECRET = os.getenv("JWT_SECRET", None)
+SECRET = os.getenv("JWT_SECRET", "JWT_SECRET")
 JWT_TIME = int(os.getenv("JWT_TIME", 3600))
 
 if SECRET is None:

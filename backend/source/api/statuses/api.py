@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from .api_settings import Paths, PREFIX
 
-from schemas.status import *
+from schemas.status import params, responses
 from services import StatusService, get_status_service
 
 
@@ -14,13 +14,13 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
     name="Get Status",
     status_code=status.HTTP_200_OK,
     responses={
-        status.HTTP_200_OK: {"model": StatusResponse},
+        status.HTTP_200_OK: {"model": responses.GetStatuses},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_400_BAD_REQUEST: {}
     }
 )
 async def get_status(
-    parameters: StatusGetParams = Depends(),
+    parameters: params.GetStatuses = Depends(),
     service: StatusService = Depends(get_status_service)
 ):
     return await service.get_tasks(parameters)
@@ -31,13 +31,13 @@ async def get_status(
     name="Create Status",
     status_code=status.HTTP_201_CREATED,
     responses={
-        status.HTTP_201_CREATED: {"model": StatusResponse},
+        status.HTTP_201_CREATED: {"model": responses.Status},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_400_BAD_REQUEST: {}
     }
 )
 async def create_status(
-    parameters: StatusCreateParams = Depends(),
+    parameters: params.CreateStatus = Depends(),
     service: StatusService = Depends(get_status_service)
 ):
     return await service.create(parameters)

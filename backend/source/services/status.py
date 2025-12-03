@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from db.repositories import BaseRepository, StatusRepository
 from db.database import get_session
 
-from schemas.status import *
+from schemas.status import params
+from typing import Any
 
 
 class StatusService:
@@ -12,7 +13,7 @@ class StatusService:
     def __init__(self, status_repo: BaseRepository):
         self.status_repo: BaseRepository = status_repo
         
-    async def create_status(self, parametes: StatusCreateParams) -> StatusResponse:
+    async def create_status(self, parametes: params.CreateStatus) -> Any:
         await self.status_repo.new(name=parametes.name)
     
 
