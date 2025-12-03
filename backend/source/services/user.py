@@ -1,5 +1,5 @@
 from fastapi import Depends
-from db.repositories import BaseRepository
+from db.repositories import AbstractRepository
 
 
 class UserService:
@@ -8,5 +8,5 @@ class UserService:
         pass
     
     
-def get_user_service(user_repo: BaseRepository = Depends()) -> UserService:
+def get_user_service(user_repo: AbstractRepository = Depends()) -> UserService:
     return UserService(user_repo)

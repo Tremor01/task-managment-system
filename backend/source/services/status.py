@@ -3,7 +3,7 @@ from fastapi import status as api_statuses
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.repositories import BaseRepository, StatusRepository
+from db.repositories import AbstractRepository, StatusRepository
 from db.database import get_session
 
 from schemas.status import params, responses
@@ -11,8 +11,8 @@ from schemas.status import params, responses
 
 class StatusService:
     
-    def __init__(self, status_repo: BaseRepository):
-        self.status_repo: BaseRepository = status_repo
+    def __init__(self, status_repo: AbstractRepository):
+        self.status_repo: AbstractRepository = status_repo
         
     async def create_status(self, parametes: params.CreateStatus) -> responses.Status:
         model = await self.status_repo.new(name=parametes.name)

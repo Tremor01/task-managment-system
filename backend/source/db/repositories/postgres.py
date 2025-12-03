@@ -7,14 +7,14 @@ from asyncpg import InterfaceError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, exc
 
-from .base import BaseRepository
+from .base import AbstractRepository
 from db.models.base import Base
 
 
 ModelT = TypeVar("ModelT", bound=Base)
 
 
-class BaseRepository(BaseRepository, Generic[ModelT]):
+class BaseRepository(AbstractRepository, Generic[ModelT]):
     
     MODEL: type[ModelT] = None  # type: ignore
 

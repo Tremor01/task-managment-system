@@ -3,7 +3,7 @@ from fastapi import status as api_statuses
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.repositories import BaseRepository, LabelRepository
+from db.repositories import AbstractRepository, LabelRepository
 from db.database import get_session
 
 from schemas.label import params, responses
@@ -11,8 +11,8 @@ from schemas.label import params, responses
 
 class LabelService:
     
-    def __init__(self, label_repo: BaseRepository):
-        self.label_repo: BaseRepository = label_repo
+    def __init__(self, label_repo: AbstractRepository):
+        self.label_repo: AbstractRepository = label_repo
     
     async def create_label(self, parameters: params.CreateLabel) -> responses.Label:
         model = await self.label_repo.new(name=parameters.name)

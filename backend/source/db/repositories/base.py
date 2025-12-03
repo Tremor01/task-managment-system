@@ -7,7 +7,7 @@ from db.models.base import Base
 ModelT = TypeVar("ModelT", bound=Base)
 
 
-class BaseRepository(ABC, Generic[ModelT]):
+class AbstractRepository(ABC, Generic[ModelT]):
     
     MODEL: type[ModelT] = None  # type: ignore
 
