@@ -2,6 +2,12 @@ class TaskManagerApp {
     constructor() {
         this.currentTaskId = null;
         this.currentItemType = null;
+        this.currentFilters = {
+            label: '',
+            status: '',
+            priority: ''
+        };
+        this.allTasks = [];
         this.initApp();
     }
 
@@ -386,11 +392,60 @@ class TaskManagerApp {
 
         try {
             const tasks = await api.getTasks();
-            this.displayTasks(tasks);
+            this.allTasks = tasks; // Сохраняем все задачи
+            this.applyCurrentFilters(); // Применяем текущие фильтры
         } catch (error) {
             console.error('Error loading tasks:', error);
             utils.handleApiError(error);
         }
+    }
+
+    applyCurrentFilters() {
+        let filteredTasks = [...this.allTasks];
+
+        // Фильтрация по метке
+        if (this.currentFilters.label) {
+            filteredTasks = filteredTasks.filter(task => {
+                // Предполагаем, что task.label это имя метки
+                // Нужно получить ID метки для фильтрации
+                const labelSelect = document.getElementById('filterLabel');
+                if (labelSelect) {
+                    const selectedOption = labelSelect.options[labelSelect.selectedIndex];
+                    const selectedLabelName = selectedOption.text;
+                    return task.label === selectedLabelName;
+                }
+                return true;
+            });
+        }
+
+        // Фильтрация по статусу
+        if (this.currentFilters.status) {
+            filteredTasks = filteredTasks.filter(task => {
+                const statusSelect = document.getElementById('filterStatus');
+                if (statusSelect) {
+                    const selectedOption = statusSelect.options[statusSelect.selectedIndex];
+                    const selectedStatusName = selectedOption.text;
+                    return task.status === selectedStatusName;
+                }
+                return true;
+            });
+        }
+
+        // Фильтрация по приоритету
+        if (this.currentFilters.priority) {
+            filteredTasks = filteredTasks.filter(task => {
+                const prioritySelect = document.getElementById('filterPriority');
+                if (prioritySelect) {
+                    const selectedOption = prioritySelect.options[prioritySelect.selectedIndex];
+                    const selectedPriorityName = selectedOption.text;
+                    return task.priority === selectedPriorityName;
+                }
+                return true;
+            });
+        }
+
+        // Отображаем отфильтрованные задачи
+        this.displayTasks(filteredTasks);
     }
 
     // Отображение задач
@@ -539,10 +594,12 @@ class TaskManagerApp {
                 api.getPriorities()
             ]);
 
+            // Заполняем фильтры
             utils.populateSelect('filterLabel', labels, 'id', 'name', true);
             utils.populateSelect('filterStatus', statuses, 'id', 'name', true);
             utils.populateSelect('filterPriority', priorities, 'id', 'name', true);
 
+            // Заполняем select в модальном окне задачи
             utils.populateSelect('taskLabel', labels, 'id', 'name', true);
             utils.populateSelect('taskStatus', statuses, 'id', 'name', false);
             utils.populateSelect('taskPriority', priorities, 'id', 'name', false);
@@ -606,8 +663,8 @@ class TaskManagerApp {
 
     // Обработка отправки формы задачи
     async handleTaskSubmit(e) {
-        console.log("SAVE TASK")
         e.preventDefault();
+        console.log('handleTaskSubmit called');
         
         if (!utils.checkAuth()) {
             utils.showNotification('Please login to save tasks', 'error');
@@ -624,24 +681,46 @@ class TaskManagerApp {
             return;
         }
         
+        // Получаем значения полей
+        const label_id = document.getElementById('taskLabel').value;
+        const status_id = document.getElementById('taskStatus').value;
+        const priority_id = document.getElementById('taskPriority').value;
+        const deadline = document.getElementById('taskDeadline').value;
+        const executorsInput = document.getElementById('taskExecutors').value;
+        
+        // Подготавливаем данные для отправки согласно схеме API
         const taskData = {
             description: description,
-            label_id: document.getElementById('taskLabel').value || null,
-            status_id: document.getElementById('taskStatus').value || null,
-            priority_id: document.getElementById('taskPriority').value || null,
-            deadline: document.getElementById('taskDeadline').value || null,
+            label_id: label_id ? parseInt(label_id) : null,
+            status_id: status_id ? parseInt(status_id) : null,
+            priority_id: priority_id ? parseInt(priority_id) : null,
+            deadline: deadline || null,
+            executors: executorsInput 
+                ? executorsInput.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id))
+                : null
         };
+        
+        console.log('Submitting task data:', taskData);
         
         try {
             if (this.currentTaskId) {
+                console.log('Updating task ID:', this.currentTaskId);
+                // Для обновления нужно добавить task_id в данные
+                taskData.task_id = parseInt(this.currentTaskId);
                 await api.updateTask(this.currentTaskId, taskData);
             } else {
+                console.log('Creating new task');
+                // Для создания задачи
                 await api.createTask(taskData);
             }
             
             this.closeTaskModal();
+            
+            // Перезагружаем данные (обновляем кэш)
             await this.loadTasks();
             await this.loadDashboardData();
+            
+            console.log('Task saved successfully');
             
         } catch (error) {
             console.error('Error saving task:', error);
@@ -668,6 +747,7 @@ class TaskManagerApp {
         if (confirm('Are you sure you want to delete this task?')) {
             try {
                 await api.deleteTask(taskId);
+                // Перезагружаем задачи (обновляем кэш)
                 await this.loadTasks();
                 await this.loadDashboardData();
             } catch (error) {
@@ -783,7 +863,44 @@ class TaskManagerApp {
             return;
         }
 
-        utils.showNotification('Filters applied', 'success');
+        // Получаем значения фильтров
+        const labelFilter = document.getElementById('filterLabel').value;
+        const statusFilter = document.getElementById('filterStatus').value;
+        const priorityFilter = document.getElementById('filterPriority').value;
+
+        // Обновляем текущие фильтры
+        this.currentFilters = {
+            label: labelFilter,
+            status: statusFilter,
+            priority: priorityFilter
+        };
+
+        // Применяем фильтры
+        this.applyCurrentFilters();
+
+        // Показываем уведомление
+        const activeFilters = [];
+        if (labelFilter) {
+            const labelSelect = document.getElementById('filterLabel');
+            const selectedLabel = labelSelect.options[labelSelect.selectedIndex].text;
+            activeFilters.push(`Label: ${selectedLabel}`);
+        }
+        if (statusFilter) {
+            const statusSelect = document.getElementById('filterStatus');
+            const selectedStatus = statusSelect.options[statusSelect.selectedIndex].text;
+            activeFilters.push(`Status: ${selectedStatus}`);
+        }
+        if (priorityFilter) {
+            const prioritySelect = document.getElementById('filterPriority');
+            const selectedPriority = prioritySelect.options[prioritySelect.selectedIndex].text;
+            activeFilters.push(`Priority: ${selectedPriority}`);
+        }
+
+        if (activeFilters.length > 0) {
+            utils.showNotification(`Filters applied: ${activeFilters.join(', ')}`, 'success');
+        } else {
+            utils.showNotification('Showing all tasks', 'info');
+        }
     }
 
     // Очистка фильтров
@@ -793,11 +910,24 @@ class TaskManagerApp {
             return;
         }
 
+        // Сбрасываем фильтры в форме
         document.getElementById('filterStatus').value = '';
         document.getElementById('filterPriority').value = '';
         document.getElementById('filterLabel').value = '';
-        utils.showNotification('Filters cleared', 'success');
+
+        // Сбрасываем текущие фильтры
+        this.currentFilters = {
+            label: '',
+            status: '',
+            priority: ''
+        };
+
+        // Показываем все задачи
+        this.displayTasks(this.allTasks);
+
+        utils.showNotification('All filters cleared', 'success');
     }
+
 
     // Редактирование профиля
     editProfile() {

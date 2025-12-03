@@ -25,6 +25,14 @@ class TaskRepository(BaseRepository[Task]):
             .join(Label, Label.id == Task.label_id)
             .join(Status, Status.id == Task.status_id)
         )
+        if parameters.label is not None:
+            query = query.where(Label.name == parameters.label)
+            
+        if parameters.priority is not None:
+            query = query.where(Priority.name == parameters.priority)
+            
+        if parameters.status is not None:
+            query = query.where(Status.name == parameters.status)
         
         result = await self.execute(query)
         return result.fetchall()
