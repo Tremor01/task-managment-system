@@ -1,8 +1,8 @@
 from pydantic import BaseModel
-from datetime import datetime
 
 
 class Status(BaseModel):
+    id: int
     name: str
     
     

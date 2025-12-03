@@ -15,4 +15,3 @@ class Task(Base):
     deadline: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True)
     
     description: Mapped[str] = mapped_column(Text())
-    

@@ -38,7 +38,7 @@ async def get_labels(
     }
 )
 async def create_label(
-    parameters: params.CreateLabel = Depends(),
+    parameters: params.CreateLabel,
     service: LabelService = Depends(get_label_service)
 ):
     return await service.create_label(parameters)
@@ -56,7 +56,7 @@ async def create_label(
     }
 )
 async def delete_label(
-    parameters: params.DeleteLabel = Depends(),
+    id: int,
     service: LabelService = Depends(get_label_service)
 ):
-    return await service.delete_label(parameters)
+    return await service.delete_label(id)

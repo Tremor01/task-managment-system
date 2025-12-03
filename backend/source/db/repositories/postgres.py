@@ -14,12 +14,18 @@ from db.models.base import Base
 ModelT = TypeVar("ModelT", bound=Base)
 
 
-class PostgresRepository(BaseRepository, Generic[ModelT]):
+class BaseRepository(BaseRepository, Generic[ModelT]):
     
     MODEL: type[ModelT] = None  # type: ignore
 
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    @property
+    def model(self) -> type[ModelT]:
+        if self.MODEL is None:
+            raise ValueError("MODEL not set")
+        return self.MODEL
 
     async def execute(self, query: Any) -> Any:
         try:
@@ -29,43 +35,35 @@ class PostgresRepository(BaseRepository, Generic[ModelT]):
             logging.error(f'Failed to execute: {e}')
 
     async def new(self, **data: Any) -> ModelT | None:
-        try:
-            obj = self.model(**data)
-            return await self.create(obj)
-        except Exception as e:
-            logging.error(f"Failed to create {self.model.__name__}: {e}")
-        return None
+        obj = self.model(**data)
+        return await self.create(obj)
 
     async def create(self, obj: ModelT) -> ModelT | None:
         async with self._start_session():
             self.session.add(obj)
-            
-            status = self._try_commit()
-            if not status:
+            try:
+                await self.session.commit()
+            except exc.IntegrityError as e:
+                logging.error(e)
+                await self.rollback()
                 return None
-            
+        async with self._start_session():
             await self.session.refresh(obj)
-            
         return obj
 
-    async def _try_commit(self) -> bool:
-        try:
-            await self.session.commit()
-            return True
-        
-        except exc.IntegrityError as e:
-            logging.error(e)
-            await self.rollback()
-            
-        return False
+    async def rollback(self):
+        await self.session.rollback()
     
     async def update(self, obj: ModelT, **kwargs: Any) -> ModelT | None:
         async with self._start_session():
             for key, value in kwargs.items():
                 setattr(obj, key, value)
                 
-            status = self._try_commit()
-            if not status:
+            try:
+                await self.session.commit()
+            except exc.IntegrityError as e:
+                logging.error(e)
+                await self.rollback()
                 return None
             
         async with self._start_session():
@@ -77,7 +75,7 @@ class PostgresRepository(BaseRepository, Generic[ModelT]):
         async with self._start_session():
             try:
                 await self.session.delete(obj)
-                await self.commit()
+                await self.session.commit()
                 return True
             except Exception as e:
                 logging.error(f"Delete failed for {self.model.__name__}: {e}")

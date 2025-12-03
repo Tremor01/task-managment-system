@@ -9,3 +9,7 @@ class GetStatuses(BaseModel):
 
 class CreateStatus(BaseModel):
     name: str
+
+
+class DeleteStatus(BaseModel):
+    status_id: int

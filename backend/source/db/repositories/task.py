@@ -1,21 +1,31 @@
-from .postgres import PostgresRepository
-from db.models import Task
-from typing import Any
+from .postgres import BaseRepository
+from db.models import Task, Priority, Label, Status
 
 from schemas.task import params
 
+from sqlalchemy import select
 
-class TaskRepository(PostgresRepository[Task]):
+
+class TaskRepository(BaseRepository[Task]):
     MODEL = Task
 
-    async def get_tasks(self, parameters: params.GetTasks) -> Any:
-        await self.select_all()
-    
-    async def create_task(self, parameters: params.CreateTask) -> Any:
-        model = await self.new(**parameters)
-        return model
+    async def get_tasks(self, parameters: params.GetTasks):
+        query = (
+            select(
+                Task.id, 
+                Task.deadline,
+                Task.description,
+                Task.created_at,
+                
+                Priority.name.label('priority'),
+                Label.name.label('label'),
+                Status.name.label('status'),
+            )
+            .join(Priority, Priority.id == Task.priority_id)
+            .join(Label, Label.id == Task.label_id)
+            .join(Status, Status.id == Task.status_id)
+        )
         
-    async def update_task(self, parameters: params.UpdateTask) -> Any:
-        ...
-    
+        result = await self.execute(query)
+        return result.fetchall()
     

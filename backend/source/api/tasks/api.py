@@ -10,7 +10,7 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(
-    path=Paths.GetTask,
+    path=Paths.GetTasks,
     name="Get Task",
     status_code=status.HTTP_200_OK,
     responses={
@@ -36,9 +36,43 @@ async def get_task(
         status.HTTP_400_BAD_REQUEST: {}
     }
 )
-async def get_task(
-    parameters: params.CreateTask = Depends(),
+async def create_task(
+    parameters: params.CreateTask,
     service: TaskService = Depends(get_task_service)
 ):
     return await service.create_task(parameters)
 
+
+@router.delete(
+    path=Paths.DeleteTask,
+    name="Delete Task",
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {"model": responses.Task},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_400_BAD_REQUEST: {}
+    }
+)
+async def delete_task(
+    task_id: int,
+    service: TaskService = Depends(get_task_service)
+):
+    return await service.delete_task(task_id)
+
+
+@router.patch(
+    path=Paths.UpdateTask,
+    name="Update Task",
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {"model": responses.Task},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_400_BAD_REQUEST: {}
+    }
+)
+async def update_task(
+    task_id: int,
+    parameters: params.UpdateTask,
+    service: TaskService = Depends(get_task_service)
+):
+    return await service.update_task(parameters, task_id)

@@ -3,7 +3,7 @@ PREFIX = "/priorities"
 
 class Paths:
     CreatePriority = "/create"
-    DeletePriority = "/delete"
-    UpdatePriority = "/update"
-    GetPriority = "/get"
+    DeletePriority = "/{id}"
+    UpdatePriority = "/{id}"
+    GetPriorities = "/get"
 

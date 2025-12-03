@@ -1,7 +1,7 @@
-from .postgres import PostgresRepository
+from .postgres import BaseRepository
 from db.models import Priority
 
 
-class PriorityRepository(PostgresRepository[Priority]):
+class PriorityRepository(BaseRepository[Priority]):
     MODEL = Priority
 

@@ -10,7 +10,7 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(
-    path=Paths.GetStatus,
+    path=Paths.GetStatuses,
     name="Get Status",
     status_code=status.HTTP_200_OK,
     responses={
@@ -23,7 +23,7 @@ async def get_status(
     parameters: params.GetStatuses = Depends(),
     service: StatusService = Depends(get_status_service)
 ):
-    return await service.get_tasks(parameters)
+    return await service.get_statuses(parameters)
 
 
 @router.post(
@@ -37,8 +37,26 @@ async def get_status(
     }
 )
 async def create_status(
-    parameters: params.CreateStatus = Depends(),
+    parameters: params.CreateStatus,
     service: StatusService = Depends(get_status_service)
 ):
-    return await service.create(parameters)
+    return await service.create_status(parameters)
+
+
+
+@router.delete(
+    path=Paths.DeleteStatus,
+    name="Delete Status",
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {"model": responses.Status},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_400_BAD_REQUEST: {}
+    }
+)
+async def delete_status(
+    id: int,
+    service: StatusService = Depends(get_status_service)
+):
+    return await service.delete_status(id)
 

@@ -1,7 +1,7 @@
-from .postgres import PostgresRepository
+from .postgres import BaseRepository
 from db.models import Status
 
 
-class StatusRepository(PostgresRepository[Status]):
+class StatusRepository(BaseRepository[Status]):
     MODEL = Status
 

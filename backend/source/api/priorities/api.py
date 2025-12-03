@@ -10,7 +10,7 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)  # type: ignore
 
 
 @router.get(
-    path=Paths.GetPriority,
+    path=Paths.GetPriorities,
     name="Get Priority",
     status_code=status.HTTP_200_OK,
     responses={
@@ -23,7 +23,7 @@ async def get_priority(
     parameters: params.GetPriorities = Depends(),
     service: PriorityService = Depends(get_priority_service)
 ):
-    return await service.get_tasks(parameters)
+    return await service.get_priorities(parameters)
 
 
 @router.post(
@@ -37,8 +37,24 @@ async def get_priority(
     }
 )
 async def create_priority(
-    parameters: params.CreatePriority = Depends(),
+    parameters: params.CreatePriority,
     service: PriorityService = Depends(get_priority_service)
 ):
     return await service.create_priority(parameters)
 
+
+@router.delete(
+    path=Paths.DeletePriority,
+    name="Delete Priority",
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {"model": responses.Priority},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_400_BAD_REQUEST: {}
+    }
+)
+async def delete_priority(
+    id: int,
+    service: PriorityService = Depends(get_priority_service)
+):
+    return await service.delete_priority(id)

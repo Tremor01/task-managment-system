@@ -3,7 +3,7 @@ PREFIX = "/labels"
 
 class Paths:
     CreateLabel = "/create"
-    DeleteLabel = "/delete"
-    UpdateLabel = "/update"
+    DeleteLabel = "/{id}"
+    UpdateLabel = "/{id}"
     GetLabel = "/get"
 

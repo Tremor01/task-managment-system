@@ -1,27 +1,443 @@
 <!DOCTYPE html>
-
 <html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="guest-only">
+    <!-- Навигационное меню -->
+    <nav class="navbar hidden">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-tasks"></i>
+                <span>Task Manager</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link" data-page="dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link" data-page="tasks">
+                    <i class="fas fa-tasks"></i> Tasks
+                </a>
+                <a href="#" class="nav-link" data-page="labels">
+                    <i class="fas fa-tags"></i> Labels
+                </a>
+                <a href="#" class="nav-link" data-page="statuses">
+                    <i class="fas fa-columns"></i> Statuses
+                </a>
+                <a href="#" class="nav-link" data-page="priorities">
+                    <i class="fas fa-flag"></i> Priorities
+                </a>
+                <a href="#" class="nav-link" data-page="profile">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Список задач</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
+    <!-- Основной контент -->
+    <main class="main-content">
+        <!-- Страница аутентификации -->
+        <div id="authPage" class="page active">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+                
+                <!-- Форма входа -->
+                <div class="auth-form active" id="loginForm">
+                    <h2>Login to Task Manager</h2>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <div class="auth-links">
+                            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                        </div>
+                    </form>
+                </div>
 
-    <body>
-        <div class="container">
-            <h1>Мой список задач</h1>
-            
-            <div class="add-task">
-            <input type="text" id="taskInput" placeholder="Что нужно сделать?">
-            <button id="addButton">Добавить</button>
+                <!-- Форма регистрации -->
+                <div class="auth-form" id="registerForm">
+                    <h2>Create Account</h2>
+                    <form id="registerFormElement">
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" id="registerPassword" required placeholder="Create a password">
+                            <small>Password must be at least 3 characters</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Форма восстановления пароля -->
+                <div class="auth-form" id="forgotPasswordForm">
+                    <h2>Reset Password</h2>
+                    <form id="forgotPasswordFormElement">
+                        <div class="form-group">
+                            <label for="resetEmail">Email</label>
+                            <input type="email" id="resetEmail" required placeholder="Enter your email">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-key"></i> Send Reset Link
+                        </button>
+                        <div class="auth-links">
+                            <a href="#" id="backToLogin">Back to login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница dashboard -->
+        <div id="dashboardPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-home"></i> Dashboard</h1>
+                <p>Welcome to your task management system</p>
             </div>
             
-            <ul id="taskList"></ul>
-        </div>
-        
-        <script src="script.js"></script>
-    </body>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #4CAF50;">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalTasks">0</h3>
+                        <p>Total Tasks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #2196F3;">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalLabels">0</h3>
+                        <p>Labels</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #FF9800;">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalPriorities">0</h3>
+                        <p>Priorities</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background-color: #9C27B0;">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalStatuses">0</h3>
+                        <p>Statuses</p>
+                    </div>
+                </div>
+            </div>
 
+            <div class="recent-tasks">
+                <h2>Recent Tasks</h2>
+                <div class="table-container">
+                    <table id="recentTasksTable">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Задачи будут загружены динамически -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница задач -->
+        <div id="tasksPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-tasks"></i> Tasks</h1>
+                <button class="btn-primary auth-only" id="addTaskBtn">
+                    <i class="fas fa-plus"></i> Add New Task
+                </button>
+            </div>
+
+            <!-- Фильтры -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="filterStatus">Status</label>
+                    <select id="filterStatus" class="auth-only">
+                        <option value="">All Statuses</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterPriority">Priority</label>
+                    <select id="filterPriority" class="auth-only">
+                        <option value="">All Priorities</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterLabel">Label</label>
+                    <select id="filterLabel" class="auth-only">
+                        <option value="">All Labels</option>
+                    </select>
+                </div>
+                <button class="btn-secondary auth-only" id="applyFilters">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+                <button class="btn-secondary auth-only" id="clearFilters">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+
+            <!-- Таблица задач -->
+            <div class="table-container">
+                <table id="tasksTable">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Label</th>
+                            <th>Created At</th>
+                            <th>Deadline</th>
+                            <th class="auth-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Задачи будут загружены динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Страница меток -->
+        <div id="labelsPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-tags"></i> Labels</h1>
+                <button class="btn-primary auth-only" id="addLabelBtn">
+                    <i class="fas fa-plus"></i> Add New Label
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table id="labelsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="auth-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Метки будут загружены динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Страница статусов -->
+        <div id="statusesPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-columns"></i> Statuses</h1>
+                <button class="btn-primary auth-only" id="addStatusBtn">
+                    <i class="fas fa-plus"></i> Add New Status
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table id="statusesTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="auth-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Статусы будут загружены динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Страница приоритетов -->
+        <div id="prioritiesPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-flag"></i> Priorities</h1>
+                <button class="btn-primary auth-only" id="addPriorityBtn">
+                    <i class="fas fa-plus"></i> Add New Priority
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table id="prioritiesTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="auth-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Приоритеты будут загружены динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Страница профиля -->
+        <div id="profilePage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-user"></i> Profile</h1>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="userEmail">user@example.com</h2>
+                            <p id="userId">ID: loading...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Email Verified:</span>
+                            <span class="detail-value" id="emailVerified">No</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Account Active:</span>
+                            <span class="detail-value" id="accountActive">Yes</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Superuser:</span>
+                            <span class="detail-value" id="isSuperuser">No</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions auth-only">
+                        <button class="btn-primary" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn-secondary" id="changePasswordBtn">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальные окна -->
+    <div id="modalOverlay" class="modal-overlay"></div>
+
+    <!-- Модальное окно создания/редактирования задачи -->
+    <div id="taskModal" class="modal">
+        <div class="modal-header">
+            <h2 id="taskModalTitle">Add New Task</h2>
+            <button class="modal-close" id="closeTaskModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskDescription">Description *</label>
+                    <textarea id="taskDescription" required rows="3" placeholder="Enter task description"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskStatus">Status</label>
+                        <select id="taskStatus">
+                            <!-- Опции будут загружены динамически -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority">
+                            <!-- Опции будут загружены динамически -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskLabel">Label</label>
+                        <select id="taskLabel">
+                            <option value="">No Label</option>
+                            <!-- Опции будут загружены динамически -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDeadline">Deadline</label>
+                        <input type="datetime-local" id="taskDeadline">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelTask">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно для меток/статусов/приоритетов -->
+    <div id="itemModal" class="modal">
+        <div class="modal-header">
+            <h2 id="itemModalTitle">Add New Item</h2>
+            <button class="modal-close" id="closeItemModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="itemForm">
+                <input type="hidden" id="itemId">
+                <div class="form-group">
+                    <label for="itemName">Name *</label>
+                    <input type="text" id="itemName" required placeholder="Enter name">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelItem">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notification" class="notification"></div>
+
+    <script src="utils.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>

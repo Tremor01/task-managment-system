@@ -3,7 +3,9 @@ from datetime import datetime
 
 
 class GetTasks(BaseModel):
-    ...
+    label: str | None = None
+    status: str | None = None
+    priority: str | None = None
 
 
 class CreateTask(BaseModel):
@@ -15,7 +17,6 @@ class CreateTask(BaseModel):
     deadline: datetime | None = None
     
     description: str
-    executors: list[int] | None = None
 
 
 class UpdateTask(BaseModel):
@@ -27,6 +28,7 @@ class UpdateTask(BaseModel):
     deadline: datetime | None = None
     
     description: str | None = None
-    executors: list[int] | None = None
 
-    
+
+class DeleteTask(BaseModel):
+    task_id: int
