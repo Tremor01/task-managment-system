@@ -24,18 +24,15 @@ services:
 
   frontend:
     build: ./frontend
-    entrypoint:
-      - "/project/entrypoint.sh"
+    ports:
+      - "3000:80"
     volumes:
-      - "./frontend:/project"
-    depends_on:
-      - backend
-    env_file:
-      - ${COLLECTORS_ENV_FILE}
+      - ./frontend:/usr/share/nginx/html
+    restart: unless-stopped
     <<: *logging
 
   db:
-    image: postgres:latest
+    image: postgres:17
     restart: always
 
     volumes:

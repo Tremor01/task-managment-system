@@ -2,7 +2,7 @@
 sleep 3
 
 # shellcheck disable=SC2164
-cd /libs/shared
+cd /project/source/db
 
 alembic upgrade head
 

@@ -1,6 +1,6 @@
-DB_USER=martinshtein
+DB_USER=user
 DB_PASSWORD=password
-DB_NAME=analytic_system_martinshtein
+DB_NAME=tasks_managment_system
 
 DB_PORT=5432
 DB_HOST=db
