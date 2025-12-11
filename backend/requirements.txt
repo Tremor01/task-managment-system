@@ -6,3 +6,13 @@ uvicorn==0.38.0
 
 fastapi-users==15.0.1
 fastapi-users-db-sqlalchemy==7.0.0
+
+# Testing dependencies
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+httpx==0.28.1
+pytest-mock==3.14.0
+faker==33.1.0
+locust==2.32.4
+pytest-benchmark==5.1.0
