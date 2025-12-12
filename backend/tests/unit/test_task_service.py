@@ -6,9 +6,9 @@ from unittest.mock import AsyncMock, MagicMock
 from datetime import datetime
 from fastapi import HTTPException
 
-from services.task import TaskService
-from schemas.task import params, responses
-from db.models import Task
+from source.services.task import TaskService
+from source.schemas.task import params, responses
+from source.db.models import Task
 
 
 @pytest.mark.unit

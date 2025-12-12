@@ -181,7 +181,7 @@ async def test_task(
 @pytest.fixture
 def mock_task_repository(mocker):
     """Mock task repository for unit tests."""
-    from db.repositories import TaskRepository
+    from source.db.repositories import TaskRepository
     mock_repo = mocker.MagicMock(spec=TaskRepository)
     return mock_repo
 
@@ -189,7 +189,7 @@ def mock_task_repository(mocker):
 @pytest.fixture
 def mock_priority_repository(mocker):
     """Mock priority repository for unit tests."""
-    from db.repositories import PriorityRepository
+    from source.db.repositories import PriorityRepository
     mock_repo = mocker.MagicMock(spec=PriorityRepository)
     return mock_repo
 
@@ -197,7 +197,7 @@ def mock_priority_repository(mocker):
 @pytest.fixture
 def mock_status_repository(mocker):
     """Mock status repository for unit tests."""
-    from db.repositories import StatusRepository
+    from source.db.repositories import StatusRepository
     mock_repo = mocker.MagicMock(spec=StatusRepository)
     return mock_repo
 
@@ -205,6 +205,6 @@ def mock_status_repository(mocker):
 @pytest.fixture
 def mock_label_repository(mocker):
     """Mock label repository for unit tests."""
-    from db.repositories import LabelRepository
+    from source.db.repositories import LabelRepository
     mock_repo = mocker.MagicMock(spec=LabelRepository)
     return mock_repo

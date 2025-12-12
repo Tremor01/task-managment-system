@@ -5,9 +5,9 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from fastapi import HTTPException
 
-from services.status import StatusService
-from schemas.status import params, responses
-from db.models import Status
+from source.services.status import StatusService
+from source.schemas.status import params, responses
+from source.db.models import Status
 
 @pytest.mark.unit
 class TestStatusService:

@@ -5,9 +5,9 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from fastapi import HTTPException
 
-from services.priority import PriorityService
-from schemas.priority import params, responses
-from db.models import Priority
+from source.services.priority import PriorityService
+from source.schemas.priority import params, responses
+from source.db.models import Priority
 
 
 @pytest.mark.unit

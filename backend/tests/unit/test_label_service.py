@@ -5,9 +5,9 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from fastapi import HTTPException
 
-from services.label import LabelService
-from schemas.label import params, responses
-from db.models import Label
+from source.services.label import LabelService
+from source.schemas.label import params, responses
+from source.db.models import Label
 
 @pytest.mark.unit
 class TestLabelService:
@@ -33,7 +33,7 @@ class TestLabelService:
         mock_label_repository.select_all = AsyncMock(return_value=[mock_label_model])
 
         # Act
-        result = await label_service.get_labels()
+        result = await label_service.get_labels(params.GetLabels())
 
         # Assert
         assert isinstance(result, responses.GetLabels)
@@ -46,7 +46,7 @@ class TestLabelService:
         mock_label_repository.select_all = AsyncMock(return_value=[])
 
         # Act
-        result = await label_service.get_labels()
+        result = await label_service.get_labels(params.GetLabels())
 
         # Assert
         assert isinstance(result, responses.GetLabels)
@@ -93,6 +93,7 @@ class TestLabelService:
         # Act
         result = await label_service.delete_label(label_id)
 
+        print(result)
         # Assert
         assert isinstance(result, responses.Label)
         mock_label_repository.delete.assert_called_once()
