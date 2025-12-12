@@ -21,6 +21,7 @@ from source.api.app import app
 
 # Test database URL
 TEST_DATABASE_URL = "postgresql+asyncpg://test_user:test_password@localhost:5433/test_taskmanager"
+TST_APP_URL = "http://localhost:8123"
 
 # Create test engine
 test_engine = create_async_engine(
@@ -76,7 +77,7 @@ async def async_client(test_session: AsyncSession) -> AsyncGenerator[AsyncClient
     
     async with AsyncClient(
         transport=ASGITransport(app=app),
-        base_url="http://test"
+        base_url=TST_APP_URL
     ) as client:
         yield client
     
@@ -90,7 +91,6 @@ def sample_priority_data() -> dict:
     """Sample priority data for testing."""
     return {
         "name": "High",
-        "description": "High priority tasks"
     }
 
 
@@ -99,7 +99,6 @@ def sample_status_data() -> dict:
     """Sample status data for testing."""
     return {
         "name": "In Progress",
-        "description": "Tasks currently being worked on"
     }
 
 
@@ -108,7 +107,6 @@ def sample_label_data() -> dict:
     """Sample label data for testing."""
     return {
         "name": "Bug",
-        "description": "Bug-related tasks"
     }
 
 
