@@ -1,7 +1,7 @@
 from .postgres import BaseRepository
-from db.models import Task, Priority, Label, Status
+from ..models import Task, Priority, Label, Status
 
-from schemas.task import params
+from ...schemas.task import params
 
 from sqlalchemy import select
 

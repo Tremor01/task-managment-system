@@ -1,5 +1,5 @@
 from fastapi import Depends
-from db.repositories import AbstractRepository
+from ..db.repositories import AbstractRepository
 
 
 class UserService:

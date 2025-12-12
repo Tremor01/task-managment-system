@@ -1,6 +1,6 @@
 class ApiService {
     constructor() {
-        this.baseURL = 'http://localhost:8000'; // Измените на адрес вашего бэкенда
+        this.baseURL = 'https://improved-broccoli-gg64vpp976phvxj4-8123.app.github.dev'; // Измените на адрес вашего бэкенда
     }
 
     // Проверить авторизацию перед запросом

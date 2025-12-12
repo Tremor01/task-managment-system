@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, exc
 
 from .base import AbstractRepository
-from db.models.base import Base
+from ..models.base import Base
 
 
 ModelT = TypeVar("ModelT", bound=Base)

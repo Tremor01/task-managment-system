@@ -3,10 +3,10 @@ from fastapi import status as api_statuses
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.repositories import AbstractRepository, LabelRepository
-from db.database import get_session
+from ..db.repositories import AbstractRepository, LabelRepository
+from ..db.dbase import get_session
 
-from schemas.label import params, responses
+from ..schemas.label import params, responses
 
 
 class LabelService:

@@ -12,7 +12,7 @@ from fastapi_users.authentication import (
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
 
-from db.models.user import User, get_user_db
+from ...db.models.user import User, get_user_db
 
 
 SECRET = os.getenv("JWT_SECRET", "JWT_SECRET")

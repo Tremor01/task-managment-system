@@ -1,4 +1,4 @@
-from db.database import Base as DBBase
+from ..dbase import Base as DBBase
 from sqlalchemy.orm import Mapped, mapped_column
 
 

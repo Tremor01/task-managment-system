@@ -1,5 +1,5 @@
 from .postgres import BaseRepository
-from db.models import Status
+from ..models import Status
 
 
 class StatusRepository(BaseRepository[Status]):

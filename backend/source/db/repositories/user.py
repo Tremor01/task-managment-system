@@ -1,5 +1,5 @@
 from .postgres import BaseRepository
-from db.models import User
+from ..models import User
 
 
 class UserRepository(BaseRepository[User]):

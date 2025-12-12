@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from .api_settings import Paths, PREFIX
 
-from schemas.priority import params, responses
-from services import PriorityService, get_priority_service
+from ...schemas.priority import params, responses
+from ...services import PriorityService, get_priority_service
 
 
 TAGS = ["Priorities"]

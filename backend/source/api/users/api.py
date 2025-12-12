@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
-from db.models.user import User
-from schemas.user.user import UserCreate, UserRead, UserUpdate
+from ...db.models import User
+from ...schemas.user.user import UserCreate, UserRead, UserUpdate
 
 from .user_manager import auth_backend, current_active_user, fastapi_users
 

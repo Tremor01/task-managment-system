@@ -2,8 +2,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from .api_settings import Paths, PREFIX
 
-from schemas.label import params, responses
-from services import LabelService, get_label_service
+from ...schemas.label import params, responses
+from ...services import LabelService, get_label_service
 
 
 TAGS = ["Labels"]

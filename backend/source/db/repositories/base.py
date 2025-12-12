@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic, Iterable, Any
 from abc import ABC, abstractmethod
 
-from db.models.base import Base
+from ..models.base import Base
 
 
 ModelT = TypeVar("ModelT", bound=Base)

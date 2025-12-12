@@ -15,7 +15,7 @@ os.environ["APP_ENV"] = "test"
 
 from source.db.models.base import Base
 from source.db.models import Task, Priority, Status, Label, User
-from source.db.database import get_session
+from source.db.dbase import get_session
 from source.api.app import app
 
 

@@ -68,8 +68,13 @@ class Utils {
 
     // Обработка ошибок API с валидацией
     handleApiError(error, formId = null) {
-        console.error('API Error:', error);
-        
+        console.error('API Error:', error.response);
+
+        if (formId == 'login') {
+            this.showNotification('User does not exsist', 'error');
+            return;
+        }
+
         if (error.response) {
             // Ошибка 401 - неавторизован
             if (error.response.status === 401) {

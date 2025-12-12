@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from .api_settings import Paths, PREFIX
 
-from schemas.task import responses, params
-from services import TaskService, get_task_service
+from ...schemas.task import responses, params
+from ...services import TaskService, get_task_service
 
 
 TAGS = ["Tasks"]

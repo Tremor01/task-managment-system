@@ -2,10 +2,10 @@ from fastapi import Depends, HTTPException
 from fastapi import status as api_statuses
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.repositories import AbstractRepository, PriorityRepository
-from db.database import get_session
+from ..db.repositories import AbstractRepository, PriorityRepository
+from ..db.dbase import get_session
 
-from schemas.priority import params, responses
+from ..schemas.priority import params, responses
 
 
 class PriorityService:
