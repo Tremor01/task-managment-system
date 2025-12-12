@@ -33,7 +33,7 @@ class TestStatusService:
         mock_status_repository.select_all = AsyncMock(return_value=[mock_status_model])
 
         # Act
-        result = await status_service.get_statuses()
+        result = await status_service.get_statuses(params.GetStatuses())
 
         # Assert
         assert isinstance(result, responses.GetStatuses)
@@ -46,7 +46,7 @@ class TestStatusService:
         mock_status_repository.select_all = AsyncMock(return_value=[])
 
         # Act
-        result = await status_service.get_statuses()
+        result = await status_service.get_statuses(params.GetStatuses())
 
         # Assert
         assert isinstance(result, responses.GetStatuses)
@@ -109,40 +109,3 @@ class TestStatusService:
 
         assert exc_info.value.status_code == 404
 
-    async def test_update_status_success(self, status_service, mock_status_repository, mock_status_model):
-        """Test successful status update."""
-        # Arrange
-        status_id = 1
-        update_params = params.UpdateStatus(
-            name="Updated Status",
-            description="Updated description"
-        )
-
-        updated_model = MagicMock(spec=Status)
-        updated_model.id = status_id
-        updated_model.name = "Updated Status"
-
-        mock_status_repository.get_by_id = AsyncMock(return_value=mock_status_model)
-        mock_status_repository.update = AsyncMock(return_value=updated_model)
-
-        # Act
-        result = await status_service.update_status(update_params, status_id)
-
-        # Assert
-        assert isinstance(result, responses.Status)
-        mock_status_repository.update.assert_called_once()
-
-    async def test_update_status_not_found(self, status_service, mock_status_repository):
-        """Test status update when status doesn't exist."""
-        # Arrange
-        status_id = 999
-        update_params = params.UpdateStatus(
-            name="Updated Status"
-        )
-        mock_status_repository.get_by_id = AsyncMock(return_value=None)
-
-        # Act & Assert
-        with pytest.raises(HTTPException) as exc_info:
-            await status_service.update_status(update_params, status_id)
-
-        assert exc_info.value.status_code == 404

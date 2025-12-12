@@ -9,3 +9,7 @@ class GetLabels(BaseModel):
 class CreateLabel(BaseModel):
     name: str
 
+
+class UpdateLabel(BaseModel):
+    name: str
+    

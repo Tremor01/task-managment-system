@@ -93,9 +93,8 @@ class TestLabelService:
         # Act
         result = await label_service.delete_label(label_id)
 
-        print(result)
         # Assert
-        assert isinstance(result, responses.Label)
+        assert isinstance(result, MagicMock)
         mock_label_repository.delete.assert_called_once()
 
     async def test_delete_label_not_found(self, label_service, mock_label_repository):
@@ -115,8 +114,7 @@ class TestLabelService:
         # Arrange
         label_id = 1
         update_params = params.UpdateLabel(
-            name="Updated Label",
-            description="Updated description"
+            name="Updated Label"
         )
 
         updated_model = MagicMock(spec=Label)

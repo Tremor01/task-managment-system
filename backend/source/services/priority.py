@@ -40,7 +40,6 @@ class PriorityService:
             items.append(responses.Priority.model_validate(model, from_attributes=True))
             
         return responses.GetPriorities(items=items)
-    
 
 def get_priority_service(session: AsyncSession = Depends(get_session)) -> PriorityService:
     repo = PriorityRepository(session)

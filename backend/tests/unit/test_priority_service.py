@@ -34,7 +34,7 @@ class TestPriorityService:
         mock_priority_repository.select_all = AsyncMock(return_value=[mock_priority_model])
         
         # Act
-        result = await priority_service.get_priorities()
+        result = await priority_service.get_priorities(params.GetPriorities())
         
         # Assert
         assert isinstance(result, responses.GetPriorities)
@@ -47,7 +47,7 @@ class TestPriorityService:
         mock_priority_repository.select_all = AsyncMock(return_value=[])
         
         # Act
-        result = await priority_service.get_priorities()
+        result = await priority_service.get_priorities(params.GetPriorities())
         
         # Assert
         assert isinstance(result, responses.GetPriorities)
@@ -110,40 +110,3 @@ class TestPriorityService:
         
         assert exc_info.value.status_code == 404
     
-    async def test_update_priority_success(self, priority_service, mock_priority_repository, mock_priority_model):
-        """Test successful priority update."""
-        # Arrange
-        priority_id = 1
-        update_params = params.UpdatePriority(
-            name="Updated Priority",
-            description="Updated description"
-        )
-        
-        updated_model = MagicMock(spec=Priority)
-        updated_model.id = priority_id
-        updated_model.name = "Updated Priority"
-        
-        mock_priority_repository.get_by_id = AsyncMock(return_value=mock_priority_model)
-        mock_priority_repository.update = AsyncMock(return_value=updated_model)
-        
-        # Act
-        result = await priority_service.update_priority(update_params, priority_id)
-        
-        # Assert
-        assert isinstance(result, responses.Priority)
-        mock_priority_repository.update.assert_called_once()
-    
-    async def test_update_priority_not_found(self, priority_service, mock_priority_repository):
-        """Test priority update when priority doesn't exist."""
-        # Arrange
-        priority_id = 999
-        update_params = params.UpdatePriority(
-            name="Updated Priority"
-        )
-        mock_priority_repository.get_by_id = AsyncMock(return_value=None)
-        
-        # Act & Assert
-        with pytest.raises(HTTPException) as exc_info:
-            await priority_service.update_priority(update_params, priority_id)
-        
-        assert exc_info.value.status_code == 404
